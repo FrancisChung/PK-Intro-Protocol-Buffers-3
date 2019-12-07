@@ -2,6 +2,7 @@ package main
 
 import (
 	"fmt"
+	"github.com/golang/protobuf/jsonpb"
 	"io/ioutil"
 	"log"
 
@@ -13,6 +14,19 @@ func main() {
 	sm := doSimple()
 
 	readAndWriteDemo(sm)
+
+	smAsString := toJSON(sm)
+	fmt.Println("smAsString:", smAsString)
+}
+
+func toJSON(pb proto.Message) string {
+	marshaler := jsonpb.Marshaler{}
+	out, err := marshaler.MarshalToString(pb)
+	if err != nil {
+		log.Fatalln("Can't convert to JSON", err)
+		return ""
+	}
+	return out
 }
 
 func readAndWriteDemo(sm proto.Message) {
