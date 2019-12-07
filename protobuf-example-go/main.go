@@ -12,8 +12,33 @@ import (
 func main() {
 	sm := doSimple()
 
+	readAndWriteDemo(sm)
+}
+
+func readAndWriteDemo(sm proto.Message) {
 	writeToFile("simple.bin", sm)
-	//readFromFile()
+	sm2 := &simplepb.SimpleMessage{}
+
+	readFromFile("simple.bin", sm2)
+	fmt.Println("Read Sm2 content:", sm2)
+}
+
+func readFromFile(fname string, pb proto.Message) error {
+	in, err := ioutil.ReadFile(fname)
+
+	if err != nil {
+		log.Fatalln("Can't read from file", err)
+		return err
+	}
+
+	err2 := proto.Unmarshal(in, pb)
+
+	if err2 != nil {
+		log.Fatalln("Couldn't put bytes into protobuf struct", err2)
+		return err2
+	}
+
+	return nil
 }
 
 func writeToFile(fname string, pb proto.Message) error {
