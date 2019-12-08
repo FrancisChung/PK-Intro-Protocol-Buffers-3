@@ -14,9 +14,7 @@ func main() {
 	sm := doSimple()
 
 	readAndWriteDemo(sm)
-
-	smAsString := toJSON(sm)
-	fmt.Println("smAsString:", smAsString)
+	JSONDemo(sm)
 }
 
 func toJSON(pb proto.Message) string {
@@ -27,6 +25,23 @@ func toJSON(pb proto.Message) string {
 		return ""
 	}
 	return out
+}
+
+func fromJSON(in string, pb proto.Message) {
+	err := jsonpb.UnmarshalString(in, pb)
+	if err != nil {
+		log.Fatalln("Couldn't unmarshal JSON into pb struct", err)
+	}
+}
+
+// JSONDemo : do I need a comment here?
+func JSONDemo(sm proto.Message) {
+	smAsString := toJSON(sm)
+	fmt.Println("smAsString:", smAsString)
+
+	sm2 := &simplepb.SimpleMessage{}
+	fromJSON(smAsString, sm2)
+	fmt.Println("FromJSON", sm2)
 }
 
 func readAndWriteDemo(sm proto.Message) {
